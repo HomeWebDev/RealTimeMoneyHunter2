@@ -2,6 +2,8 @@
 using System.Threading;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace MoveShapeDemo
 {
@@ -18,6 +20,9 @@ namespace MoveShapeDemo
         private ShapeModel _coinModel;
         private bool _modelUpdated;
         private bool _coinUpdated;
+        private bool _userPick;
+        private bool _getUser;
+        private string _user;
         public Broadcaster()
         {
             // Save our hub context so we can easily use it 
@@ -50,6 +55,16 @@ namespace MoveShapeDemo
                 _hubContext.Clients.All.updateCoinShape(_coinModel);
                 _coinUpdated = false;
             }
+            if (_userPick)
+            {
+                _hubContext.Clients.All.userChoose(_model);
+                _userPick = false;
+            }
+            if (_getUser)
+            {
+                _hubContext.Clients.Client(_user).getUser(_user);
+                _getUser = false;
+            }
         }
         public void UpdateShape(ShapeModel clientModel)
         {
@@ -61,6 +76,23 @@ namespace MoveShapeDemo
             _coinModel = coinModel;
             _coinUpdated = true;
         }
+
+        public void UserChoose(ShapeModel clientModel)
+        {
+            _model = clientModel;
+            _userPick = true;
+            //_hubContext.Clients.AllExcept(_model.LastUpdatedBy).userChoose(_model);
+            //_hubContext.Clients.All.userChoose(_model);
+        }
+
+        public void GetUser(string user)
+        {
+            _getUser = true;
+            _user = user;
+            //_hubContext.Clients.Client(user).getUser(user);
+        }
+
+
         public static Broadcaster Instance
         {
             get
@@ -74,6 +106,9 @@ namespace MoveShapeDemo
     {
         // Is set via the constructor on each creation
         private Broadcaster _broadcaster;
+        private static readonly ConcurrentDictionary<string, object> _connections =
+            new ConcurrentDictionary<string, object>();
+
         public MoveShapeHub()
             : this(Broadcaster.Instance)
         {
@@ -119,6 +154,61 @@ namespace MoveShapeDemo
             // Update the shape model within our broadcaster
             _broadcaster.UpdateCoinShape(coinModel);
         }
+
+        public void GetUser()
+        {
+            _broadcaster.GetUser(Context.ConnectionId);
+        }
+
+        public void UserChoose(ShapeModel clientModel)
+        {
+            if (clientModel.ShapeOwner == null ||
+                clientModel.ShapeOwner.Equals("none"))
+            {
+                clientModel.LastUpdatedBy = Context.ConnectionId;
+                clientModel.ShapeOwner = Context.ConnectionId;
+                _broadcaster.UserChoose(clientModel);
+            }
+        }
+
+        public override Task OnConnected()
+        {
+            ShapeModel sm = new ShapeModel();
+            sm.ShapeOwner = Context.ConnectionId;
+            _connections.TryAdd(Context.ConnectionId, null);
+            sm.PlayerId = "player" + _connections.Count.ToString();
+            return Clients.All.clientConnected(sm);
+        }
+
+        //public override Task OnConnected()
+        //{
+        //    _connections.TryAdd(Context.ConnectionId, null);
+        //    return Clients.All.clientCountChanged(_connections.Count);
+        //}
+
+        public override Task OnReconnected()
+        {
+            _connections.TryAdd(Context.ConnectionId, null);
+            return Clients.All.clientCountChanged(_connections.Count);
+        }
+
+        public override Task OnDisconnected()
+        {
+            ShapeModel sm = new ShapeModel();
+            sm.ShapeOwner = Context.ConnectionId;
+            sm.PlayerId = "player" + _connections.Count.ToString();
+            object value;
+            _connections.TryRemove(Context.ConnectionId, out value);
+            return Clients.AllExcept(Context.ConnectionId).clientDisconnected(sm);
+        }
+
+
+        //public override Task OnDisconnected()
+        //{
+        //    object value;
+        //    _connections.TryRemove(Context.ConnectionId, out value);
+        //    return Clients.All.clientCountChanged(_connections.Count);
+        //}
     }
     public class ShapeModel
     {
@@ -132,7 +222,12 @@ namespace MoveShapeDemo
         [JsonIgnore]
         public string LastUpdatedBy { get; set; }
         [JsonProperty("ShapeId")]
-        public string ShapeId { get; set; }
+        public int ShapeId { get; set; }
+        [JsonProperty("ShapeOwner")]
+        public string ShapeOwner { get; set; }
+        [JsonProperty("PlayerId")]
+        public string PlayerId { get; set; }
+
     }
 
 }

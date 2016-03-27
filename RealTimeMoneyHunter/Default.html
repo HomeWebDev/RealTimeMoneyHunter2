@@ -3,31 +3,12 @@
 <head>
     <title>RealTimeMoneyHunter</title>
     <style>
-        #shape {
-            width: 100px;
-            height: 100px;
-            background-color: #FF0000;
-            position: fixed;
-            left: 0px;
-            top: 0px;
+        html, body {
+            padding: 0; margin: 0;
+            width: 100%; height: 100%;
+            font-family: 'Segoe UI', Arial;
         }
-        #shape2 {
-            width: 100px;
-            height: 100px;
-            background-color: #0000FF;
-            position: fixed;
-            left: 1000px;
-            top: 0px;
-        }
-        #shape3 {
-            width: 100px;
-            height: 100px;
-            background-color: #00FF00;
-            position: fixed;
-            left: 1000px;
-            top: 500px;
-        }
-        #coinshape {
+       #coinshape {
             width: 50px;
             height: 50px;
             background-color: #FFD700;
@@ -38,6 +19,31 @@
             left: 500px;
             top: 250px;
         }
+        #shape {
+            width: 100px;
+            height: 100px;
+            background-color: #FF0000;
+            position: fixed;
+            cursor: move;
+        }
+        #shape2 {
+            width: 100px;
+            height: 100px;
+            background-color: #0000FF;
+            position: fixed;
+            cursor: move;
+        }
+        #shape3 {
+            width: 100px;
+            height: 100px;
+            background-color: #00FF00;
+            position: fixed;
+            cursor: move;
+        }
+        /*#testshape {
+            width: 25px;
+            height: 25px;
+            background-color: #000000;*/
     </style>
 </head>
 <body>
@@ -53,6 +59,7 @@
                 $shape2 = $("#shape2"),
                 $shape = $("#shape"),
                 $coinshape = $("#coinshape"),
+                body = window.document.body,
                 // Send a maximum of 10 messages per second
                 // (mouse movements trigger a lot of messages)
                 messageFrequency = 20,
@@ -67,7 +74,7 @@
                     left: 500,
                     top: 250
                 }
-                moved = false;
+            moved = false;
             moveShapeHub.client.updateShape = function (model) {
                 shapeModel = model;
                 // Gradually move the shape towards the new location (interpolate)
@@ -94,6 +101,7 @@
 
             $.connection.hub.start().done(function () {
                 $shape3.draggable({
+                    containment: "parent",
                     drag: function () {
                         shapeModel = $shape3.offset();
                         moved = true;
@@ -101,6 +109,7 @@
                     }
                 });
                 $shape2.draggable({
+                    containment: "parent",
                     drag: function () {
                         shapeModel = $shape2.offset();
                         moved = true;
@@ -108,12 +117,14 @@
                     }
                 });
                 $shape.draggable({
+                    containment: "parent",
                     drag: function () {
                         shapeModel = $shape.offset();
                         moved = true;
                         shapeModel.ShapeId = 1;
                     }
                 });
+
                 //Check if money taken
                 setInterval(checkIfMoneyTaken, updateRate);
 
@@ -158,11 +169,16 @@
             }
         });
     </script>
-
+    <form id="form1" action="">
+      <input id="red" type="radio" name="shapeOwner" value="red"> red<br>
+      <input id="blue" type="radio" name="shapeOwner" value="blue"> blue<br>
+      <input id="green" type="radio" name="shapeOwner" value="green"> green
+    </form>
+    <p id="Textdemo">hello</p>
+    <div id="coinshape" ></div>
     <div id="shape" ></div>
     <div id="shape2" ></div>
     <div id="shape3" ></div>
-    <div id="coinshape" ></div>
-
+    <script src="Scripts/PlayerScript.js"></script>
 </body>
 </html>
