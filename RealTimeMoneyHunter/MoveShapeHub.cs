@@ -156,9 +156,15 @@ namespace MoveShapeDemo
         }
 
         public void GetUser()
-        {
+        {            
             _broadcaster.GetUser(Context.ConnectionId);
         }
+
+        public async Task<string> GetUserN()
+        {
+           return await Clients.Caller.getUserN(Context.ConnectionId);
+        }
+
 
         public void UserChoose(ShapeModel clientModel)
         {
