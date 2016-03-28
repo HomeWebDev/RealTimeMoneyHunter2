@@ -84,6 +84,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\GameSyle.css" />
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <None Include="Properties\PublishProfiles\RealTimeMoneyHunter.pubxml" />

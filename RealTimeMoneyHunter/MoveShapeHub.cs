@@ -106,8 +106,8 @@ namespace MoveShapeDemo
     {
         // Is set via the constructor on each creation
         private Broadcaster _broadcaster;
-        private static readonly ConcurrentDictionary<string, object> _connections =
-            new ConcurrentDictionary<string, object>();
+        private static readonly ConcurrentDictionary<string, ShapeModel> _connections =
+            new ConcurrentDictionary<string, ShapeModel>();
 
         public MoveShapeHub()
             : this(Broadcaster.Instance)
@@ -171,12 +171,20 @@ namespace MoveShapeDemo
             }
         }
 
+        public Task OtherPlayer(ShapeModel clientModel)
+        {
+            clientModel.ShapeOwner = Context.ConnectionId;
+            ShapeModel temp = new ShapeModel();
+            _connections.TryGetValue(clientModel.ShapeOwner, out temp);
+            return Clients.Others.otherPlayer(temp);
+        }
+
         public override Task OnConnected()
         {
             ShapeModel sm = new ShapeModel();
             sm.ShapeOwner = Context.ConnectionId;
-            _connections.TryAdd(Context.ConnectionId, null);
-            sm.PlayerId = "player" + _connections.Count.ToString();
+            sm.PlayerId = "player" + (_connections.Count + 1).ToString();
+            _connections.TryAdd(Context.ConnectionId, sm);
             return Clients.All.clientConnected(sm);
         }
 
@@ -197,7 +205,7 @@ namespace MoveShapeDemo
             ShapeModel sm = new ShapeModel();
             sm.ShapeOwner = Context.ConnectionId;
             sm.PlayerId = "player" + _connections.Count.ToString();
-            object value;
+            ShapeModel value;
             _connections.TryRemove(Context.ConnectionId, out value);
             return Clients.AllExcept(Context.ConnectionId).clientDisconnected(sm);
         }

@@ -18,14 +18,27 @@ $(function () {
     moveShapeHub.client.clientConnected = function (model) {
         var Shapy = model;
         //$("<div>hej</div").prependTo("body");
-        $newplayer = $("<div id='"+Shapy.ShapeOwner+"'></div").prependTo("body");
-        $newplayer.text(Shapy.PlayerId);
+        $newplayer = $("<div id='"+Shapy.ShapeOwner+"'></div").prependTo("body").addClass("PlayerShape");
+        $newplayer.text(Shapy.ShapeOwner+": "+ Shapy.PlayerId);
+        moveShapeHub.server.otherPlayer(Shapy);
+
     }
 
     moveShapeHub.client.clientDisconnected = function (model) {
-        var Shapy = model
+        var Shapy = model;
         $toremove = $("#"+Shapy.ShapeOwner);
         $toremove.remove();
+    }
+
+    moveShapeHub.client.otherPlayer = function (model) {
+        var Shapy = model;
+        if (Shapy.ShapeOwner != null) {
+            if (!$("#"+Shapy.ShapeOwner).length){
+                $newPlayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo("body").addClass("PlayerShape");
+                $newPlayer.text(Shapy.ShapeOwner+": "+ Shapy.PlayerId);
+                var t = 1;
+                }
+        }
     }
 
     moveShapeHub.client.getUser = function (oo) {
@@ -75,18 +88,36 @@ $(function () {
         var val = $('input[name=shapeOwner]:checked', '#form1').val();
         switch (val) {
             case "red":
-                Shapy.ShapeId = 1;
+                $("#" + user).css("background","#FF0000")
                 break;
             case "blue":
-                Shapy.ShapeId = 2;
+                $("#" + user).css("background","#0000FF")
                 break;
             case "green":
-                Shapy.ShapeId = 3;
+                $("#" + user).css("background","#00FF00")
                 break;
             default:
                 Shapy.ShapeId = 0;
         }
-        moveShapeHub.server.userChoose(Shapy);
     });
+
+    //$('#form1').on('change', function () {
+    //    moveShapeHub.server.getUser();
+    //    var val = $('input[name=shapeOwner]:checked', '#form1').val();
+    //    switch (val) {
+    //        case "red":
+    //            Shapy.ShapeId = 1;
+    //            break;
+    //        case "blue":
+    //            Shapy.ShapeId = 2;
+    //            break;
+    //        case "green":
+    //            Shapy.ShapeId = 3;
+    //            break;
+    //        default:
+    //            Shapy.ShapeId = 0;
+    //    }
+    //    moveShapeHub.server.userChoose(Shapy);
+    //});
 
 });

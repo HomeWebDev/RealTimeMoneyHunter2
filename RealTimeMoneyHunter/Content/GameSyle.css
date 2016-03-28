@@ -1,0 +1,9 @@
+﻿.PlayerShape {
+    width: 100px;
+    height: 100px;
+    background-color: #c98ce5;
+    position: fixed;
+    cursor: move;
+    top: 100px;
+    left: 200px;
+}
