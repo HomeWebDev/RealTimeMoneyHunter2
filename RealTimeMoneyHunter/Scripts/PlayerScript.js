@@ -5,6 +5,7 @@ $(function () {
     $body = $('body');
     $Textdemo = $("#Textdemo");
     $coinshape = $("#coinshape");
+    $parent = $("#Container");
 
     moveShapeHub = $.connection.moveShapeHub;
     // Send a maximum of 10 messages per second
@@ -33,10 +34,10 @@ $(function () {
     moveShapeHub.client.clientConnected = function (model) {
         var Shapy = model;
         //$("<div>hej</div").prependTo("body");
-        $newplayer = $("<div id='"+Shapy.ShapeOwner+"'></div").prependTo("body").addClass("PlayerShape");
-        $newplayer.text(Shapy.ShapeOwner+": "+ Shapy.PlayerId);
+        $newplayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo($parent).addClass("PlayerShape");
+        $newplayer.text(Shapy.ShapeOwner + ": " + Shapy.PlayerId);
         moveShapeHub.server.otherPlayer(Shapy);
-    }
+    };
 
     $.connection.hub.start().done(function () {
         moveShapeHub.server.getUserN();
@@ -44,9 +45,9 @@ $(function () {
 
     moveShapeHub.client.clientDisconnected = function (model) {
         var Shapy = model;
-        $toremove = $("#"+Shapy.ShapeOwner);
+        $toremove = $("#" + Shapy.ShapeOwner);
         $toremove.remove();
-    }
+    };
 
     moveShapeHub.client.updateShape = function (model) {
         shapeModel = model;
@@ -63,6 +64,11 @@ $(function () {
     moveShapeHub.client.updateCoinShape = function (model) {
         coinModel = model;
         coinModel = { left: model.left, top: model.top }
+        coinModel.left = ($parent.width() < model.left) ? $parent.width() -50 : model.left;
+        coinModel.top = ($parent.height() < model.top) ? $parent.height() : model.top;
+        coinModel.left = $parent.position().left > coinModel.left ? $parent.position().left : coinModel.left;
+        coinModel.top = $parent.position().top > coinModel.top ? $parent.position().top : coinModel.top;
+
         document.getElementById("coinshape").style.left = coinModel.left + "px";
         document.getElementById("coinshape").style.top = coinModel.top + "px";
     };
@@ -70,55 +76,17 @@ $(function () {
     moveShapeHub.client.otherPlayer = function (model) {
         var Shapy = model;
         if (Shapy.ShapeOwner != null) {
-            if (!$("#"+Shapy.ShapeOwner).length){
-                $newPlayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo("body").addClass("PlayerShape");
-                $newPlayer.text(Shapy.ShapeOwner+": "+ Shapy.PlayerId);
+            if (!$("#" + Shapy.ShapeOwner).length) {
+                $newPlayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo($parent).addClass("PlayerShape");
+                $newPlayer.text(Shapy.ShapeOwner + ": " + Shapy.PlayerId);
                 var t = 1;
-                }
+            }
         }
-    }
+    };
 
     moveShapeHub.client.getUserN = function (oo) {
         user = oo;
     };
-
-    //moveShapeHub.client.userChoose = function (model) {
-    //    if (model.ShapeOwner != null) {
-    //        var Shapy = model
-    //        $Textdemo.text(Shapy.ShapeOwner);
-    //    }
-    //    val = Shapy.ShapeId;
-    //    switch (val) {
-    //        case 1:
-    //            if ($Textdemo[0].textContent == user) {
-    //                $shape.draggable('enable');
-    //                }
-    //            else
-    //            {
-    //                $shape.draggable('disable' );
-    //            }
-    //            break;
-    //        case 2:
-    //            if ($Textdemo[0].textContent == user) {
-    //                $shape2.draggable('enable');
-    //                }
-    //            else
-    //            {
-    //                $shape2.draggable('disable' );
-    //            }
-    //            break;
-    //        case 3:
-    //            if ($Textdemo[0].textContent == user) {
-    //                $shape3.draggable('enable');
-    //                }
-    //            else
-    //            {
-    //                $shape3.draggable('disable' );
-    //            }
-    //            break;
-    //        default:
-    //    }
-    //};
 
     $('#form1').on('change', function () {
         //moveShapeHub.server.getUserN();
@@ -158,7 +126,7 @@ $(function () {
             moveShapeHub.server.updateModel(shapeModel);
             moved = false;
         }
-    }
+    };
 
     function checkIfMoneyTaken() {
 
@@ -187,5 +155,5 @@ $(function () {
                 moveShapeHub.server.moveCoin(coinModel);
             }
         }
-    }
+    };
 });
