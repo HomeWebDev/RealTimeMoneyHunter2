@@ -64,7 +64,7 @@ $(function () {
     moveShapeHub.client.updateCoinShape = function (model) {
         coinModel = model;
         coinModel = { left: model.left, top: model.top }
-        coinModel.left = ($parent.width() < model.left) ? $parent.width() -50 : model.left;
+        coinModel.left = (($parent.width() -50) < model.left) ? $parent.width() -50 : model.left;
         coinModel.top = ($parent.height() < model.top) ? $parent.height() : model.top;
         coinModel.left = $parent.position().left > coinModel.left ? $parent.position().left : coinModel.left;
         coinModel.top = $parent.position().top > coinModel.top ? $parent.position().top : coinModel.top;
