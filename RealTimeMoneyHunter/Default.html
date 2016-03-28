@@ -3,6 +3,7 @@
 <head>
     <title>RealTimeMoneyHunter</title>
     <link href="/Content/GameSyle.css" rel="stylesheet" />
+    <link rel="stylesheet" href="Content/themes/base/jquery-ui.css">
     <style>
         html,
         body {
@@ -54,16 +55,52 @@
     <script src="Scripts/jquery.signalR-2.0.0.js"></script>
     <script src="/signalr/hubs"></script>
 
+
     <h1 id="Textdemo">Welcome to the treasure</h1>
     <h4>Select a color and to join the game</h4>
-    <form id="form1" action="">
-        <input id="red" type="radio" name="shapeOwner" value="red"> red<br>
-        <input id="blue" type="radio" name="shapeOwner" value="blue"> blue<br>
-        <input id="green" type="radio" name="shapeOwner" value="green"> green
-    </form>
-    <div id="Container" class="GameField">
-        <div id="coinshape"></div>
-    </div>
+    <table>
+        <tr>
+            <td>
+                <form id="form1" action="">
+                    <div id="radio">
+                        <input id="red" type="radio" name="shapeOwner" value="red"><label for="red">red</label>
+                        <input id="blue" type="radio" name="shapeOwner" value="blue"><label for="blue">blue</label>
+                        <input id="green" type="radio" name="shapeOwner" value="green"><label for="green">green</label>
+                    </div>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="Container" class="GameField">
+                    <div id="coinshape"></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script>
+        $(function () {
+            $("#radio").buttonset();
+            function runEffect() {
+                  // get effect type from
+                  // most effect types need no options passed by default
+                var options = {};
+                    // run the effect
+                $( "#Container" ).show( "fold", options, 500, callback );
+            };
+           //callback function to bring a hidden box back
+           function callback() {
+                setTimeout(function() {
+                    $("#Container:visible").removeAttr("style").show();
+                }, 1000 );
+            };
+                // set effect from select menu value
+            $( "#radio" ).click(function() {
+                runEffect();
+            });
+            $( "#Container" ).hide();
+        });
+    </script>
     <script src="Scripts/PlayerScript.js"></script>
 </body>
 </html>
