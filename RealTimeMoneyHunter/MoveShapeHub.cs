@@ -209,9 +209,12 @@ namespace MoveShapeDemo
 
         public override Task OnConnected()
         {
+            int free = 0;
             ShapeModel sm = new ShapeModel();
             sm.ShapeOwner = Context.ConnectionId;
-            sm.PlayerId = "player" + (_connections.Count + 1).ToString();
+            //sm.PlayerId = "player" + (_connections.Count + 1).ToString();
+            _connections.ReturnFreeId(out free);
+            sm.PlayerId = "player" + free.ToString();
             _connections.TryAdd(Context.ConnectionId, sm);
             return Clients.All.clientConnected(sm);
         }
@@ -236,6 +239,7 @@ namespace MoveShapeDemo
             sm.CoinScore = 0;
             ShapeModel value;
             _connections.TryRemove(Context.ConnectionId, out value);
+            sm.PlayerId = value.PlayerId;
             return Clients.AllExcept(Context.ConnectionId).clientDisconnected(sm);
         }
 
