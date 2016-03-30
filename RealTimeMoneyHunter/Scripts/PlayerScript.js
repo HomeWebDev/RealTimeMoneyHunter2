@@ -36,8 +36,30 @@ $(function () {
         //$("<div>hej</div").prependTo("body");
         $newplayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo($parent).addClass("PlayerShape");
         $newplayer.text(Shapy.ShapeOwner + ": " + Shapy.PlayerId);
+        $playerScore = $("<div id='" + Shapy.PlayerId + "'></div").prependTo($parent).addClass("CoinScore");
+        $playerScore.text(Shapy.PlayerId+" Score: "+Shapy.CoinScore);
+
         moveShapeHub.server.otherPlayer(Shapy);
     };
+
+    moveShapeHub.client.updateScore = function (model) {
+        $playerScore = $("#" + model.PlayerId);
+        $playerScore.text(model.PlayerId+" Score: "+model.CoinScore);
+    };
+
+    moveShapeHub.client.winner = function (model)
+    {
+        alert(model.PlayerId + " Winnds!");
+        moveShapeHub.server.clearScoreForAllUsers();
+    }
+
+    moveShapeHub.client.clearScoreForAllUsers = function()
+    {
+        $playerScores = $("div").filter(".CoinScore").each(function (i) {
+            $(this).text(this.id + " Score: 0");
+        });
+        
+    }
 
     $.connection.hub.start().done(function () {
         moveShapeHub.server.getUserN();
@@ -47,6 +69,8 @@ $(function () {
         var Shapy = model;
         $toremove = $("#" + Shapy.ShapeOwner);
         $toremove.remove();
+        $ScoreToRemove = $("#" + Shapy.PlayerId);
+        $ScoreToRemove.remove();
     };
 
     moveShapeHub.client.updateShape = function (model) {
@@ -79,6 +103,8 @@ $(function () {
             if (!$("#" + Shapy.ShapeOwner).length) {
                 $newPlayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo($parent).addClass("PlayerShape");
                 $newPlayer.text(Shapy.ShapeOwner + ": " + Shapy.PlayerId);
+                $playerScore = $("<div id='" + Shapy.PlayerId + "'></div").prependTo($parent).addClass("CoinScore");
+                $playerScore.text(Shapy.PlayerId+" Score: "+Shapy.CoinScore);
                 var t = 1;
             }
         }
@@ -148,11 +174,11 @@ $(function () {
 
             //If shape was within area of coin update score and move coin
             if (moneyHit) {
+                //Move coin
+                moveShapeHub.server.moveCoin(coinModel);
                 //Update score
                 moveShapeHub.server.updateScore(shapeModel);
 
-                //Move coin
-                moveShapeHub.server.moveCoin(coinModel);
             }
         }
     };

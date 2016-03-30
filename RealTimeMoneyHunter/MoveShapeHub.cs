@@ -124,7 +124,7 @@ namespace MoveShapeDemo
             _broadcaster.UpdateShape(clientModel);
         }
 
-        public void UpdateScore(ShapeModel clientModel)
+        public Task UpdateScore(ShapeModel clientModel)
         {
             if (System.Web.HttpContext.Current.Application["score"] == null)
             {
@@ -137,9 +137,31 @@ namespace MoveShapeDemo
 
             int testScore = Convert.ToInt32(System.Web.HttpContext.Current.Application["score"]);
 
-            clientModel.LastUpdatedBy = Context.ConnectionId;
+            ShapeModel sm = new ShapeModel();
+            _connections.TryGetValue(Context.ConnectionId,out sm);
+
+            sm.CoinScore += 5;
+
+            foreach (var item in _connections.Values)
+            {
+                if(item.CoinScore > 100)
+                {
+                    return Clients.All.winner(item);
+
+                }
+            }
+            
+            return Clients.All.updateScore(sm);
             // Update the shape model within our broadcaster
-            _broadcaster.UpdateShape(clientModel);
+        }
+
+        public Task ClearScoreForAllUsers()
+        {
+            foreach (var item in _connections.Values)
+            {
+                item.CoinScore = 0;
+            }
+            return Clients.All.clearScoreForAllUsers();
         }
 
         public void MoveCoin(ShapeModel coinModel)
@@ -211,6 +233,7 @@ namespace MoveShapeDemo
             ShapeModel sm = new ShapeModel();
             sm.ShapeOwner = Context.ConnectionId;
             sm.PlayerId = "player" + _connections.Count.ToString();
+            sm.CoinScore = 0;
             ShapeModel value;
             _connections.TryRemove(Context.ConnectionId, out value);
             return Clients.AllExcept(Context.ConnectionId).clientDisconnected(sm);
@@ -241,7 +264,8 @@ namespace MoveShapeDemo
         public string ShapeOwner { get; set; }
         [JsonProperty("PlayerId")]
         public string PlayerId { get; set; }
-
+        [JsonProperty("CoinScore")]
+        public int CoinScore { get; set; }
     }
 
 }
