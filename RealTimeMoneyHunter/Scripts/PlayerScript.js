@@ -6,6 +6,7 @@ $(function () {
     $Textdemo = $("#Textdemo");
     $coinshape = $("#coinshape");
     $parent = $("#Container");
+    $ScoreContainer = $("#ScoreContainer");
 
     moveShapeHub = $.connection.moveShapeHub;
     // Send a maximum of 10 messages per second
@@ -37,7 +38,7 @@ $(function () {
         //$("<div>hej</div").prependTo("body");
         $newplayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo($parent).addClass("PlayerShape");
         $newplayer.text(Shapy.ShapeOwner + ": " + Shapy.PlayerId);
-        $playerScore = $("<div id='" + Shapy.PlayerId + "'></div").prependTo($parent).addClass("CoinScore");
+        $playerScore = $("<div id='" + Shapy.PlayerId + "'></div").prependTo($ScoreContainer).addClass("CoinScore");
         $playerScore.text(Shapy.PlayerId+" Score: "+Shapy.CoinScore);
 
         moveShapeHub.server.otherPlayer(Shapy);
@@ -104,7 +105,7 @@ $(function () {
             if (!$("#" + Shapy.ShapeOwner).length) {
                 $newPlayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo($parent).addClass("PlayerShape");
                 $newPlayer.text(Shapy.ShapeOwner + ": " + Shapy.PlayerId);
-                $playerScore = $("<div id='" + Shapy.PlayerId + "'></div").prependTo($parent).addClass("CoinScore");
+                $playerScore = $("<div id='" + Shapy.PlayerId + "'></div").prependTo($ScoreContainer).addClass("CoinScore");
                 $playerScore.text(Shapy.PlayerId+" Score: "+Shapy.CoinScore);
                 var t = 1;
             }

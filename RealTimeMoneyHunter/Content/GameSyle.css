@@ -9,8 +9,11 @@
     width: 800px;
     height: 600px;
     background-color: #3f69a4;
-    position: fixed;
 }
 .CoinScore{
     color: #ffd800;
+}
+.ScoreBoard{
+    background-color: #3f69a4;
+
 }
