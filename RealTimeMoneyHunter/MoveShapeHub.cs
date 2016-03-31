@@ -173,9 +173,6 @@ namespace MoveShapeDemo
             coinModel.Left = randLeft;
             coinModel.Top = randTop;
 
-            coinModel.Left = 0;
-            coinModel.Top = 0;
-
             // Update the shape model within our broadcaster
             _broadcaster.UpdateCoinShape(coinModel);
         }
