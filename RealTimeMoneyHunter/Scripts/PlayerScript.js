@@ -183,7 +183,7 @@ $(function () {
 
                 var myVar;
 
-                myVar = setTimeout(alertFunc, 50);
+                myVar = setTimeout(alertFunc, 200);
 
                 coinCatchable = false;
             }
