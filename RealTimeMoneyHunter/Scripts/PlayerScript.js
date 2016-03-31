@@ -29,6 +29,7 @@ $(function () {
     }
     var user;
     moved = false;
+    coinCatchable = true;
 
 
     moveShapeHub.client.clientConnected = function (model) {
@@ -49,7 +50,7 @@ $(function () {
 
     moveShapeHub.client.winner = function (model)
     {
-        alert(model.PlayerId + " Winnds!");
+        alert(model.PlayerId + " Wins!");
         moveShapeHub.server.clearScoreForAllUsers();
     }
 
@@ -157,7 +158,7 @@ $(function () {
     function checkIfMoneyTaken() {
 
         // Only check for money if there is a new movement
-        if (moved) {
+        //if (moved) {
 
             moneyHit = false;
 
@@ -173,13 +174,24 @@ $(function () {
             }
 
             //If shape was within area of coin update score and move coin
-            if (moneyHit) {
+            if (moneyHit & coinCatchable) {
                 //Move coin
                 moveShapeHub.server.moveCoin(coinModel);
                 //Update score
                 moveShapeHub.server.updateScore(shapeModel);
 
+
+                var myVar;
+
+                myVar = setTimeout(alertFunc, 50);
+
+                coinCatchable = false;
             }
-        }
+        //}
+    };
+
+    function alertFunc() {
+        //alert("Hello!");
+        coinCatchable = true;
     };
 });
