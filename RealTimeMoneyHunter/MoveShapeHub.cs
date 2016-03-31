@@ -168,10 +168,13 @@ namespace MoveShapeDemo
         {
             //Move coin to random position within game area
             Random rnd = new Random();
-            int randLeft = rnd.Next(1, 1000);
-            int randTop = rnd.Next(1, 500);
+            int randLeft = rnd.Next(1, 800);
+            int randTop = rnd.Next(1, 600);
             coinModel.Left = randLeft;
             coinModel.Top = randTop;
+
+            coinModel.Left = 0;
+            coinModel.Top = 0;
 
             // Update the shape model within our broadcaster
             _broadcaster.UpdateCoinShape(coinModel);

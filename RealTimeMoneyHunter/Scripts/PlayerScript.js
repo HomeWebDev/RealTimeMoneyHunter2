@@ -7,6 +7,7 @@ $(function () {
     $coinshape = $("#coinshape");
     $parent = $("#Container");
     $ScoreContainer = $("#ScoreContainer");
+    $Coin = $("#coinshape");
 
     moveShapeHub = $.connection.moveShapeHub;
     // Send a maximum of 10 messages per second
@@ -90,12 +91,12 @@ $(function () {
     moveShapeHub.client.updateCoinShape = function (model) {
         coinModel = model;
         coinModel = { left: model.left, top: model.top }
-        coinModel.left = (($parent.width() -50) < model.left) ? $parent.width() -50 : model.left;
-        coinModel.top = ($parent.height() < model.top) ? $parent.height() : model.top;
+        coinModel.left = (($parent.width() -50) < model.left) ? $parent.width() -50 +$parent.offset().left : model.left;
+        coinModel.top = ($parent.height() - 50 < model.top) ? $parent.height() - 50 +$parent.offset().top : model.top;
         coinModel.left = $parent.position().left > coinModel.left ? $parent.position().left : coinModel.left;
         coinModel.top = $parent.position().top > coinModel.top ? $parent.position().top : coinModel.top;
 
-        document.getElementById("coinshape").style.left = coinModel.left + "px";
+        document.getElementById("coinshape").style.left =  coinModel.left + "px";
         document.getElementById("coinshape").style.top = coinModel.top + "px";
     };
 
