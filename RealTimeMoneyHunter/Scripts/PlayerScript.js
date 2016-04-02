@@ -38,21 +38,21 @@ $(function () {
         var Shapy = model;
         //$("<div>hej</div").prependTo("body");
         $newplayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo($parent).addClass("PlayerShape");
-        $newplayer.text(Shapy.ShapeOwner + ": " + Shapy.PlayerId);
+        $newplayer.text("Player " + ": " + Shapy.ShapeId);
         $playerScore = $("<div id='" + Shapy.PlayerId + "'></div").prependTo($ScoreContainer).addClass("CoinScore");
-        $playerScore.text(Shapy.PlayerId+" Score: "+Shapy.CoinScore);
+        $playerScore.text("Player " + Shapy.ShapeId+" Score: "+Shapy.CoinScore);
 
         moveShapeHub.server.otherPlayer(Shapy);
     };
 
     moveShapeHub.client.updateScore = function (model) {
         $playerScore = $("#" + model.PlayerId);
-        $playerScore.text(model.PlayerId+" Score: "+model.CoinScore);
+        $playerScore.text("Player " + model.ShapeId+" Score: "+model.CoinScore);
     };
 
     moveShapeHub.client.winner = function (model)
     {
-        alert(model.PlayerId + " Wins!");
+        alert("Player " + model.ShapeId + "\n wins!");
         moveShapeHub.server.clearScoreForAllUsers();
     }
 
@@ -105,9 +105,9 @@ $(function () {
         if (Shapy.ShapeOwner != null) {
             if (!$("#" + Shapy.ShapeOwner).length) {
                 $newPlayer = $("<div id='" + Shapy.ShapeOwner + "'></div").prependTo($parent).addClass("PlayerShape");
-                $newPlayer.text(Shapy.ShapeOwner + ": " + Shapy.PlayerId);
+                $newPlayer.text("Player " + ": " + Shapy.ShapeId);
                 $playerScore = $("<div id='" + Shapy.PlayerId + "'></div").prependTo($ScoreContainer).addClass("CoinScore");
-                $playerScore.text(Shapy.PlayerId+" Score: "+Shapy.CoinScore);
+                $playerScore.text("Player " + Shapy.ShapeId+" Score: "+Shapy.CoinScore);
                 var t = 1;
             }
         }

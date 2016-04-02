@@ -215,6 +215,7 @@ namespace MoveShapeDemo
             //sm.PlayerId = "player" + (_connections.Count + 1).ToString();
             _connections.ReturnFreeId(out free);
             sm.PlayerId = "player" + free.ToString();
+            sm.ShapeId = free;
             _connections.TryAdd(Context.ConnectionId, sm);
             return Clients.All.clientConnected(sm);
         }

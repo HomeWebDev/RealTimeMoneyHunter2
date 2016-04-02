@@ -2,7 +2,7 @@
     width: 100px;
     height: 100px;
     background-color: #c98ce5;
-    position: fixed;
+    position: absolute;
     cursor: move;
 }
 .GameField{
@@ -14,6 +14,5 @@
     color: #ffd800;
 }
 .ScoreBoard{
-    background-color: #3f69a4;
-
+    background-color: #3f69a4
 }
