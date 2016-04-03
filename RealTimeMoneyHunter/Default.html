@@ -9,6 +9,7 @@
         body {
             padding: 0; margin: 0;
             font-family: 'Segoe UI', Arial;
+            background-color: #9EB1E4;
         }
         #coinshape {
             width: 50px;
@@ -49,9 +50,9 @@
     </style>
 </head>
 <body>
-    <h1 id="Textdemo">Welcome to the treasure</h1>
-    <h4>Select a color and to join the game</h4>
-    <table>
+    <h1 id="Textdemo" class="gameColor">Welcome to the treasure hunter</h1>
+    <h4 class="gameColor">Select a color and join the hunt</h4>
+    <table class="padded">
         <tr>
             <td>
                 <form id="form1" action="">
@@ -64,18 +65,12 @@
             </td>
         </tr>
     </table>
-    <table>
-        <tr>
-            <td class="ScoreBoard">
-                <div id="ScoreContainer"></div>
-            </td>
-            <td>
-                <div id="Container" class="GameField">
-                    <div id="coinshape"></div>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <div id="wrapper" class="wrapper">
+        <div id="ScoreContainer" class="ScoreBoard"></div>
+        <div id="Container" class="GameField">
+            <div id="coinshape"></div>
+        </div>
+    </div>
     <script src="Scripts/jquery-1.10.2.min.js"></script>
     <script src="Scripts/jquery-ui-1.10.3.min.js"></script>
     <script src="Scripts/jquery.signalR-2.0.0.js"></script>

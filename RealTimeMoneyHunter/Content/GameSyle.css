@@ -5,14 +5,31 @@
     position: absolute;
     cursor: move;
 }
+h1.gameColor{
+    color:#FFFBFF;
+    padding-left:300px;
+}
+h4.gameColor{
+    color:#FFFBFF;
+    padding-left:145px;
+}
+.wrapper{
+    width: 960px;
+    height: 700px;
+}
 .GameField{
     width: 800px;
     height: 600px;
     background-color: #3f69a4;
+    float:left;
 }
 .CoinScore{
     color: #ffd800;
 }
 .ScoreBoard{
-    background-color: #3f69a4
+    width: 145px;
+    float: left;   
+}
+table.padded{
+    padding-left: 140px;
 }
